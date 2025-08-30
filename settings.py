@@ -3,7 +3,7 @@ import sys
 from os import path
 
 # Set the debug values
-DEBUG = False
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 DEBUG_TOOLBAR = False
 
 # Export prometheus metrics
@@ -201,7 +201,7 @@ COUNTRIES_OVERRIDE = {
 }
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '00000000000000000000000000000000000000000000000'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'unsafe-default-key')
 
 # Mailman poster password for announcements
 MAILMAN_PASSWORD = ''
@@ -211,9 +211,13 @@ ANNOUNCE_EMAIL = 'arch-announce@lists.archlinux.org'
 
 DATABASES = {
     'default': {
-        'ENGINE':  'django.db.backends.sqlite3',
-        'NAME':    'database.db',
-    },
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get('MYSQL_DATABASE', 'default_db'),
+        'USER': os.environ.get('MYSQL_USER', 'user'),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD', 'password'),
+        'HOST': os.environ.get('MYSQL_HOST', 'localhost'),
+        'PORT': os.environ.get('MYSQL_PORT', '3306'),
+    }
 }
 
 # Default implementation to use for AutoField
